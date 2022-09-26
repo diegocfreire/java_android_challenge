@@ -35,8 +35,6 @@ public class MainViewModel extends AndroidViewModel {
 
     public final ObservableBoolean dataLoading = new ObservableBoolean(false);
 
-    public final ObservableBoolean dataAvaliable = new ObservableBoolean(false);
-
     public final ObservableField<String> filteringText = new ObservableField<>();
 
     private final MutableLiveData<String> mFilterConstraint = new MutableLiveData<>();

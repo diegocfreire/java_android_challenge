@@ -26,7 +26,7 @@ public class RepositoriesListRemoteDataSource extends BaseRemoteDataSource{
     public Single<Resource<RepositoriesList>> getRepositoriesList() {
         RepositoriesListService mainService;
 
-        mainService = getMainService(RepositoriesListService.class,"s3.amazonaws.com");
+        mainService = getMainService(RepositoriesListService.class,"api.github.com");
 
         return mainService.getRepositoriesList()
                 .observeOn(Schedulers.computation())

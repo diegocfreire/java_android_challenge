@@ -8,4 +8,6 @@
     <string name="dialog_button_cancel">Cancelar</string>
     <string name="dialog_button_delete">Excluir</string>
     <string name="dialog_button_post">Enviar</string>
+    <string name="search_loading_message">Procurando registros</string>
+
 </resources>
