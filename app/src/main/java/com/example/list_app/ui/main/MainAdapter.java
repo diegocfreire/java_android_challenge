@@ -79,6 +79,11 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
             mBinding.title.setText(item.name);
             mBinding.descricao.setText(item.description);
+            mBinding.image.setImageBitmap(item.bitmap);
+            mBinding.username.setText(item.owner.login);
+            mBinding.forkNumber.setText(String.valueOf(item.forks_count));
+            mBinding.starNumber.setText(String.valueOf(item.stargazers_count));
+
         }
 
     }

@@ -1,6 +1,16 @@
 package com.example.list_app.ui.main;
 
 import android.app.Application;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.Observable;
@@ -8,7 +18,6 @@ import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.LiveDataReactiveStreams;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
@@ -18,8 +27,12 @@ import com.example.list_app.data.repository.RepositoriesListRepository;
 import com.example.list_app.data.entities.RepositoriesList;
 import com.example.list_app.data.network.Resource;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
@@ -65,7 +78,7 @@ public class MainViewModel extends AndroidViewModel {
         Disposable disposable = mRepositoriesListRepository.getRepositoriesList(page)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.computation())
-                .map(this::sortAndMapToFlexibleItem)
+                .map(this::mapToItemAndImage)
                 .map(Resource::success)
                 .onErrorReturn(Resource::error)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -94,18 +107,76 @@ public class MainViewModel extends AndroidViewModel {
 
             Disposable disposable = mRepositoriesListRepository.getRepositoriesList(page)
                     .observeOn(Schedulers.computation())
-                    .map(this::sortAndMapToFlexibleItem)
+                    .map(this::mapToItemAndImage)
                     .map(Resource::success)
                     .onErrorReturn(Resource::error)
                     .subscribe(e::onNext);
             addDisposable(disposable);
         }, BackpressureStrategy.BUFFER);
     }
-    private List<Item> sortAndMapToFlexibleItem(Resource<RepositoriesList> equipes){
+
+    private List<Item> mapToItemAndImage(Resource<RepositoriesList> equipes){
         List<Item> sortedList =new ArrayList<>();
         if(equipes.data!=null)
             sortedList = new ArrayList<>(equipes.data.items);
+
+        for (Item item : sortedList){
+            item.bitmap = getImage(item.owner.avatar_url);
+        }
         return sortedList;
+    }
+
+    private Bitmap getImage(String imageURL){
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        // Once the executor parses the URL
+        // and receives the image, handler will load it
+        // in the ImageView
+        Handler handler = new Handler(Looper.getMainLooper());
+
+        // Initializing the image
+        final Bitmap[] image = {null};
+
+        InputStream in = null;
+        try {
+            in = new URL(imageURL).openStream();
+
+        image[0] = BitmapFactory.decodeStream(in);
+
+        Bitmap srcBitmap = image[0];
+        // Select whichever of width or height is minimum
+        int squareBitmapWidth = Math.min(srcBitmap.getWidth(), srcBitmap.getHeight());
+
+        // Generate a bitmap with the above value as dimensions
+        Bitmap dstBitmap = Bitmap.createBitmap(
+                squareBitmapWidth,
+                squareBitmapWidth,
+                Bitmap.Config.ARGB_8888
+        );
+
+        Canvas canvas = new Canvas(dstBitmap);
+
+        // initializing Paint
+        Paint paint = new Paint();
+        paint.setAntiAlias(true);
+
+        // Generate a square (rectangle with all sides same)
+        Rect rect = new Rect(0, 0, squareBitmapWidth, squareBitmapWidth);
+        RectF rectF = new RectF(rect);
+
+        // Operations to draw a circle
+        canvas.drawOval(rectF, paint);
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        Float left = Float.valueOf(((squareBitmapWidth - srcBitmap.getWidth()) / 2));
+        Float top = Float.valueOf(((squareBitmapWidth - srcBitmap.getHeight()) / 2));
+        canvas.drawBitmap(srcBitmap, left, top, paint);
+        srcBitmap.recycle();
+
+        return dstBitmap;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private void setupObservables() {

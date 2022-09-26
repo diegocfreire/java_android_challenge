@@ -13,6 +13,7 @@ import com.example.list_app.R;
 import com.example.list_app.data.entities.Item;
 import com.example.list_app.data.entities.PullRequests;
 import com.example.list_app.databinding.ItemMainBinding;
+import com.example.list_app.databinding.ItemPullRequestBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ public class PullRequestsAdapter extends RecyclerView.Adapter<PullRequestsAdapte
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.item_main, viewGroup, false);
+                .inflate(R.layout.item_pull_request, viewGroup, false);
 
         return new ViewHolder(Objects.requireNonNull(DataBindingUtil.bind(view)));
     }
@@ -65,9 +66,9 @@ public class PullRequestsAdapter extends RecyclerView.Adapter<PullRequestsAdapte
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final ItemMainBinding mBinding;
+        private final ItemPullRequestBinding mBinding;
 
-        public ViewHolder(ItemMainBinding binding) {
+        public ViewHolder(ItemPullRequestBinding binding) {
             super(binding.getRoot());
             mBinding = binding;
         }
