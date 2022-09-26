@@ -12,6 +12,7 @@ import androidx.databinding.adapters.ListenerUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.list_app.R;
+import com.example.list_app.common.time.AppDownloadImage;
 import com.example.list_app.data.entities.Item;
 import com.example.list_app.databinding.ItemMainBinding;
 
@@ -79,11 +80,11 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
             mBinding.title.setText(item.name);
             mBinding.descricao.setText(item.description);
-            mBinding.image.setImageBitmap(item.bitmap);
             mBinding.username.setText(item.owner.login);
             mBinding.forkNumber.setText(String.valueOf(item.forks_count));
             mBinding.starNumber.setText(String.valueOf(item.stargazers_count));
 
+            AppDownloadImage.GetAppDownloadImage().getImage(item.owner.avatar_url,mBinding.image);
         }
 
     }

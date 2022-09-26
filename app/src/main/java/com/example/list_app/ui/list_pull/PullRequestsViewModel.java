@@ -15,10 +15,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.list_app.data.entities.Item;
 import com.example.list_app.data.entities.PullRequests;
-import com.example.list_app.data.entities.RepositoriesList;
 import com.example.list_app.data.network.Resource;
 import com.example.list_app.data.repository.RepositoriesListRepository;
-import com.example.list_app.utils.ImageUrlUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,9 +82,6 @@ public class PullRequestsViewModel extends AndroidViewModel {
         List<PullRequests> sortedList =new ArrayList<>();
         if(equipes.data!=null)
             sortedList = new ArrayList<>(equipes.data);
-        for (PullRequests item : sortedList){
-            item.bitmap = ImageUrlUtil.getImage(item.user.avatar_url);
-        }
         return sortedList;
     }
 

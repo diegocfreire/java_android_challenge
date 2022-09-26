@@ -1,16 +1,6 @@
 package com.example.list_app.ui.main;
 
 import android.app.Application;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.os.Handler;
-import android.os.Looper;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.Observable;
@@ -26,14 +16,9 @@ import com.example.list_app.data.entities.Item;
 import com.example.list_app.data.repository.RepositoriesListRepository;
 import com.example.list_app.data.entities.RepositoriesList;
 import com.example.list_app.data.network.Resource;
-import com.example.list_app.utils.ImageUrlUtil;
 
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
@@ -120,10 +105,6 @@ public class MainViewModel extends AndroidViewModel {
         List<Item> sortedList =new ArrayList<>();
         if(equipes.data!=null)
             sortedList = new ArrayList<>(equipes.data.items);
-
-        for (Item item : sortedList){
-            item.bitmap = ImageUrlUtil.getImage(item.owner.avatar_url);
-        }
         return sortedList;
     }
 

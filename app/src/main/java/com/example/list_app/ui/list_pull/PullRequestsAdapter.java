@@ -13,6 +13,7 @@ import androidx.databinding.ObservableField;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.list_app.R;
+import com.example.list_app.common.time.AppDownloadImage;
 import com.example.list_app.common.time.DateTime;
 import com.example.list_app.common.time.LocalDate;
 import com.example.list_app.common.time.LocalDateFormat;
@@ -92,6 +93,7 @@ public class PullRequestsAdapter extends RecyclerView.Adapter<PullRequestsAdapte
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+            AppDownloadImage.GetAppDownloadImage().getImage(item.user.avatar_url,mBinding.image);
 
         }
 
