@@ -1,14 +1,17 @@
 package com.example.list_app.ui.main;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.Observable;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AbsListView;
 
 import com.example.list_app.R;
 import com.example.list_app.data.entities.Item;
@@ -29,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
     private MainAdapter mAdapter;
 
     private ActivityMainBinding mBinding;
+
+    private boolean isScrollig;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +72,31 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mBinding.fundoList.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager menager = new LinearLayoutManager(this);
+        mBinding.fundoList.setLayoutManager(menager);
         mBinding.fundoList.setAdapter(mAdapter);
+
+        mBinding.fundoList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL){
+                    isScrollig = true;
+                }
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int currentItems = menager.getChildCount();
+                int totalItems = menager.getItemCount();
+                int scrollOutItems = menager.findFirstVisibleItemPosition();
+
+                if (isScrollig && (currentItems+scrollOutItems == totalItems)){
+                    mViewModel.newPageRepositoriesList();
+                }
+            }
+        });
 
         subscribeItems();
     }
@@ -92,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPropertyChanged(Observable observable, int i) {
                 Resource<List<Item>> resource = mViewModel.getmValue().get();
+                assert resource != null;
                 mViewModel.dataLoading.set(resource.status == Status.LOADING);
 
                 if (resource.status == Status.SUCCESS) {

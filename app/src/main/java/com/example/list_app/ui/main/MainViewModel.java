@@ -46,15 +46,13 @@ public class MainViewModel extends AndroidViewModel {
 
     private MainAdapter mAdapter;
 
+    private int page = 0;
+
     public MainViewModel(@NonNull Application application, @NonNull RepositoriesListRepository repositoriesListRepository) {
         super(application);
         mRepositoriesListRepository = repositoriesListRepository;
-        loadRepositoriesList(1);
+        loadRepositoriesList(0);
         setupObservables();
-    }
-
-    public LiveData<Resource<List<Item>>> getItems() {
-        return mItems;
     }
 
     public ObservableField<Resource<List<Item>>> getmValue() {
@@ -62,6 +60,7 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     private void loadRepositoriesList(int page) {
+        this.page = page+1;
         dataLoading.set(true);
         Disposable disposable = mRepositoriesListRepository.getRepositoriesList(page)
                 .subscribeOn(Schedulers.io())
@@ -73,6 +72,14 @@ public class MainViewModel extends AndroidViewModel {
                 .subscribe(mValue::set);
         addDisposable(disposable);
 
+    }
+
+    public void newPageRepositoriesList(){
+        loadRepositoriesList(page);
+    }
+
+    public void refreshRepositoriesList(){
+        loadRepositoriesList(0);
     }
 
     public MainAdapter getAdapter() {
