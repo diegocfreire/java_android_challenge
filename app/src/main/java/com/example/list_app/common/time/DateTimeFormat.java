@@ -14,5 +14,5 @@ public @interface DateTimeFormat {
 
     String ISO8601_DATETIME = "yyyy-MM-dd'T'HH:mm:ss";
 
-    String DATETIME = "dd-MM-yyyy HH:mm";
+    String DATETIME = "dd/MM/yyyy HH:mm";
 }

@@ -1,5 +1,8 @@
 package com.example.list_app.ui.list_pull;
 
+import static com.example.list_app.common.time.DateTimeFormat.DATETIME;
+import static com.example.list_app.common.time.DateTimeFormat.ISO8601_DATETIME;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +13,7 @@ import androidx.databinding.ObservableField;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.list_app.R;
+import com.example.list_app.common.time.DateTime;
 import com.example.list_app.common.time.LocalDate;
 import com.example.list_app.common.time.LocalDateFormat;
 import com.example.list_app.data.entities.Item;
@@ -17,6 +21,7 @@ import com.example.list_app.data.entities.PullRequests;
 import com.example.list_app.databinding.ItemMainBinding;
 import com.example.list_app.databinding.ItemPullRequestBinding;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -81,7 +86,13 @@ public class PullRequestsAdapter extends RecyclerView.Adapter<PullRequestsAdapte
             mBinding.descricao.setText(item.body);
             mBinding.image.setImageBitmap(item.bitmap);
             mBinding.username.setText(item.user.login);
-            mBinding.dataCreate.setText(item.created_at.toString(LocalDateFormat.DATE2));
+            try {
+                DateTime create = DateTime.parse(item.created_at,ISO8601_DATETIME);
+                mBinding.dataCreate.setText(create.toString(DATETIME));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
         }
 
     }

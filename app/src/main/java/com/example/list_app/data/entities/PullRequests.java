@@ -2,7 +2,7 @@ package com.example.list_app.data.entities;
 
 import android.graphics.Bitmap;
 
-import com.example.list_app.common.time.LocalDate;
+import com.example.list_app.common.time.DateTime;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -86,9 +86,9 @@ class Repo{
     public String labels_url;
     public String releases_url;
     public String deployments_url;
-    public LocalDate created_at;
-    public LocalDate updated_at;
-    public LocalDate pushed_at;
+    public DateTime created_at;
+    public DateTime updated_at;
+    public DateTime pushed_at;
     public String git_url;
     public String ssh_url;
     public String clone_url;
@@ -142,8 +142,8 @@ public class PullRequests {
     public String title;
     public Owner user;
     public String body;
-    public LocalDate created_at;
-    public LocalDate updated_at;
+    public String created_at;
+    public String updated_at;
     public Object closed_at;
     public Object merged_at;
     public String merge_commit_sha;
