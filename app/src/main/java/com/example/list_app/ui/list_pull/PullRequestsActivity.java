@@ -2,7 +2,9 @@ package com.example.list_app.ui.list_pull;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +22,7 @@ import com.example.list_app.databinding.ActivityMainBinding;
 import com.example.list_app.utils.DialogUtils;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 public class PullRequestsActivity extends AppCompatActivity {
@@ -41,8 +44,20 @@ public class PullRequestsActivity extends AppCompatActivity {
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         setupAdapter();
         setLoadData();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public static Intent getStartIntent(Context context, Item item) {
@@ -82,6 +97,8 @@ public class PullRequestsActivity extends AppCompatActivity {
     private PullRequestsViewModel findOrCreateViewModel() {
         Item item = (Item) getIntent().getExtras().get(EXTRA_ITEM);
 
+        Objects.requireNonNull(getSupportActionBar()).setTitle(item.name);
+
         PullRequestsViewModel.Factory factory = new PullRequestsViewModel.Factory(
                 getApplication(),
                 RepositoriesListRepository.getInstance(),
@@ -91,7 +108,7 @@ public class PullRequestsActivity extends AppCompatActivity {
     }
 
     private void onClick(PullRequests body){
-
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(body.html_url)));
     }
 
     private void subscribeItems() {

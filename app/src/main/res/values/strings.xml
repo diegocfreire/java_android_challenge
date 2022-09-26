@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">list-app</string>
+    <string name="app_name">Github Repositorios</string>
 
     <string name="dialog_button_yes">Sim</string>
     <string name="dialog_button_no">Não</string>

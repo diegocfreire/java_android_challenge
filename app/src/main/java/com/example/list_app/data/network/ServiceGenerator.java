@@ -28,7 +28,6 @@ public class ServiceGenerator {
 
     static {
 
-
         httpClient = new OkHttpClient.Builder()
                 .connectTimeout(CONNECT_TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
                 .writeTimeout(WRITE_TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)

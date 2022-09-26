@@ -27,7 +27,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.list_pull.PullRequestsActivity" />
+        <activity android:name=".ui.list_pull.PullRequestsActivity"/>
+
     </application>
 
 </manifest>

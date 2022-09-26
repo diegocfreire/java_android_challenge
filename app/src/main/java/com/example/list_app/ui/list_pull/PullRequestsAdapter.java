@@ -10,6 +10,8 @@ import androidx.databinding.ObservableField;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.list_app.R;
+import com.example.list_app.common.time.LocalDate;
+import com.example.list_app.common.time.LocalDateFormat;
 import com.example.list_app.data.entities.Item;
 import com.example.list_app.data.entities.PullRequests;
 import com.example.list_app.databinding.ItemMainBinding;
@@ -79,6 +81,7 @@ public class PullRequestsAdapter extends RecyclerView.Adapter<PullRequestsAdapte
             mBinding.descricao.setText(item.body);
             mBinding.image.setImageBitmap(item.bitmap);
             mBinding.username.setText(item.user.login);
+            mBinding.dataCreate.setText(item.created_at.toString(LocalDateFormat.DATE2));
         }
 
     }
