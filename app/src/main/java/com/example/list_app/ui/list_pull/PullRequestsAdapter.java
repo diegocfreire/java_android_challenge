@@ -1,4 +1,4 @@
-package com.example.list_app.ui.main;
+package com.example.list_app.ui.list_pull;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -6,26 +6,25 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
-import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
-import androidx.databinding.adapters.ListenerUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.list_app.R;
 import com.example.list_app.data.entities.Item;
+import com.example.list_app.data.entities.PullRequests;
 import com.example.list_app.databinding.ItemMainBinding;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
+public class PullRequestsAdapter extends RecyclerView.Adapter<PullRequestsAdapter.ViewHolder> {
 
-    private ArrayList<Item> localDataSet = new ArrayList<>();
+    private ArrayList<PullRequests> localDataSet;
 
-    public final ObservableField<Item> dataOnClick = new ObservableField<Item>();
+    public final ObservableField<PullRequests> dataOnClick = new ObservableField<PullRequests>();
 
-    public MainAdapter(ArrayList<Item> dataSet) {
+    public PullRequestsAdapter(ArrayList<PullRequests> dataSet) {
         localDataSet = dataSet;
     }
 
@@ -42,7 +41,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-        Item item = localDataSet.get(position);
+        PullRequests item = localDataSet.get(position);
 
         viewHolder.bind(item);
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -59,11 +58,9 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         return localDataSet.size();
     }
 
-    public void updateDataSet(List<Item> data, boolean b) {
-        if(!localDataSet.containsAll(data)) {
-            localDataSet.addAll(data);
-            notifyDataSetChanged();
-        }
+    public void updateDataSet(List<PullRequests> data, boolean b) {
+        localDataSet = new ArrayList(data);
+        notifyDataSetChanged();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -75,10 +72,10 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             mBinding = binding;
         }
 
-        public void bind(Item item) {
+        public void bind(PullRequests item) {
 
-            mBinding.title.setText(item.name);
-            mBinding.descricao.setText(item.description);
+            mBinding.title.setText(item.title);
+            mBinding.descricao.setText(item.body);
         }
 
     }

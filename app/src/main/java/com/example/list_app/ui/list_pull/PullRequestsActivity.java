@@ -1,4 +1,9 @@
-package com.example.list_app.ui.main;
+package com.example.list_app.ui.list_pull;
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -6,29 +11,28 @@ import androidx.databinding.Observable;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-
 import com.example.list_app.R;
 import com.example.list_app.data.entities.Item;
+import com.example.list_app.data.entities.PullRequests;
 import com.example.list_app.data.network.Status;
 import com.example.list_app.data.repository.RepositoriesListRepository;
 import com.example.list_app.databinding.ActivityMainBinding;
-import com.example.list_app.ui.list_pull.PullRequestsActivity;
 import com.example.list_app.utils.DialogUtils;
-import com.example.list_app.utils.ObjectUtils;
 
 import java.util.ArrayList;
 
 
-public class MainActivity extends AppCompatActivity {
+public class PullRequestsActivity extends AppCompatActivity {
 
-    private MainViewModel mViewModel;
+    private PullRequestsViewModel mViewModel;
 
-    private MainAdapter mAdapter;
+    private PullRequestsAdapter mAdapter;
 
     private ActivityMainBinding mBinding;
+
+    public static final int REQUEST_DETAIL_CODE = 8;
+
+    public static final String EXTRA_ITEM = "EXTRA_ITEM";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +43,11 @@ public class MainActivity extends AppCompatActivity {
 
         setupAdapter();
         setLoadData();
+    }
+
+    public static Intent getStartIntent(Context context, Item item) {
+        return new Intent(context, PullRequestsActivity.class)
+                .putExtra(EXTRA_ITEM, item);
     }
 
     private void setLoadData() {
@@ -54,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupAdapter() {
-        mAdapter = mViewModel.getAdapter();
+        mAdapter = new PullRequestsAdapter(new ArrayList<>());
 
         mAdapter.dataOnClick.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
@@ -70,17 +79,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private MainViewModel findOrCreateViewModel() {
-        MainViewModel.Factory factory = new MainViewModel.Factory(
+    private PullRequestsViewModel findOrCreateViewModel() {
+        Item item = (Item) getIntent().getExtras().get(EXTRA_ITEM);
+
+        PullRequestsViewModel.Factory factory = new PullRequestsViewModel.Factory(
                 getApplication(),
-                RepositoriesListRepository.getInstance()
+                RepositoriesListRepository.getInstance(),
+                item
         );
-        return ViewModelProviders.of(this, factory).get(MainViewModel.class);
+        return ViewModelProviders.of(this, factory).get(PullRequestsViewModel.class);
     }
 
-    private void onClick(Item item){
-        Intent it = PullRequestsActivity.getStartIntent(this, item);
-        startActivityForResult(it, PullRequestsActivity.REQUEST_DETAIL_CODE);
+    private void onClick(PullRequests body){
+
     }
 
     private void subscribeItems() {

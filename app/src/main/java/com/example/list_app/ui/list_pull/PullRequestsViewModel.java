@@ -1,4 +1,4 @@
-package com.example.list_app.ui.main;
+package com.example.list_app.ui.list_pull;
 
 import android.app.Application;
 
@@ -14,9 +14,10 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.list_app.data.entities.Item;
-import com.example.list_app.data.repository.RepositoriesListRepository;
+import com.example.list_app.data.entities.PullRequests;
 import com.example.list_app.data.entities.RepositoriesList;
 import com.example.list_app.data.network.Resource;
+import com.example.list_app.data.repository.RepositoriesListRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class MainViewModel extends AndroidViewModel {
+public class PullRequestsViewModel extends AndroidViewModel {
 
     private final RepositoriesListRepository mRepositoriesListRepository;
 
@@ -40,40 +41,36 @@ public class MainViewModel extends AndroidViewModel {
 
     private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
-    private LiveData<Resource<List<Item>>> mItems;
+    private LiveData<Resource<List<PullRequests>>> mPullRequests;
 
-    private MainAdapter mAdapter;
+    private final Item mItem;
 
-    public MainViewModel(@NonNull Application application, @NonNull RepositoriesListRepository repositoriesListRepository) {
+    public PullRequestsViewModel(
+            @NonNull Application application,
+            @NonNull RepositoriesListRepository repositoriesListRepository,
+            @NonNull Item item) {
         super(application);
         mRepositoriesListRepository = repositoriesListRepository;
-        loadRepositoriesList(1);
+        this.mItem = item;
+        loadEquipesPublisher();
         setupObservables();
     }
 
-    public LiveData<Resource<List<Item>>> getItems() {
-        return mItems;
+    public LiveData<Resource<List<PullRequests>>> getItems() {
+        return mPullRequests;
     }
 
-    private void loadRepositoriesList(int page) {
-        if(mItems==null)
-        mItems = LiveDataReactiveStreams.fromPublisher(getRepositoriesListPublisher(page)
+    private void loadEquipesPublisher() {
+        mPullRequests = LiveDataReactiveStreams.fromPublisher(getEquipesPublisher()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()));
-
     }
 
-    public MainAdapter getAdapter() {
-        if(mAdapter == null)
-            mAdapter = new MainAdapter(new ArrayList<>());
-        return mAdapter;
-    }
-
-    private Flowable<Resource<List<Item>>> getRepositoriesListPublisher(int page) {
+    private Flowable<Resource<List<PullRequests>>> getEquipesPublisher() {
         return Flowable.create(e -> {
             e.onNext(Resource.loading(null));
 
-            Disposable disposable = mRepositoriesListRepository.getRepositoriesList(page)
+            Disposable disposable = mRepositoriesListRepository.getPullRequestList(mItem.name,mItem.owner.login)
                     .observeOn(Schedulers.computation())
                     .map(this::sortAndMapToFlexibleItem)
                     .map(Resource::success)
@@ -82,10 +79,10 @@ public class MainViewModel extends AndroidViewModel {
             addDisposable(disposable);
         }, BackpressureStrategy.BUFFER);
     }
-    private List<Item> sortAndMapToFlexibleItem(Resource<RepositoriesList> equipes){
-        List<Item> sortedList =new ArrayList<>();
+    private List<PullRequests> sortAndMapToFlexibleItem(Resource<List<PullRequests>> equipes){
+        List<PullRequests> sortedList =new ArrayList<>();
         if(equipes.data!=null)
-            sortedList = new ArrayList<>(equipes.data.items);
+            sortedList = new ArrayList<>(equipes.data);
         return sortedList;
     }
 
@@ -121,19 +118,23 @@ public class MainViewModel extends AndroidViewModel {
 
         private final RepositoriesListRepository mRepositoriesListRepository;
 
+        private final Item mItem;
+
         public Factory(
                 @NonNull Application application,
-                @NonNull RepositoriesListRepository fundoRepository
+                @NonNull RepositoriesListRepository fundoRepository,
+                @NonNull Item item
         ) {
             mApplication = application;
             mRepositoriesListRepository = fundoRepository;
+            mItem = item;
         }
 
         @NonNull
         @Override
         public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
             //noinspection unchecked
-            return (T) new MainViewModel(mApplication, mRepositoriesListRepository);
+            return (T) new PullRequestsViewModel(mApplication, mRepositoriesListRepository,mItem);
         }
     }
 }
