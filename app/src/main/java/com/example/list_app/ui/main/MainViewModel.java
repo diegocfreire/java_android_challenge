@@ -39,8 +39,6 @@ public class MainViewModel extends AndroidViewModel {
 
     private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
-    private LiveData<Resource<List<Item>>> mItems;
-
     public final ObservableField<Resource<List<Item>>> mValue = new ObservableField<>();
 
     private MainAdapter mAdapter;
@@ -77,28 +75,10 @@ public class MainViewModel extends AndroidViewModel {
         loadRepositoriesList(page);
     }
 
-    public void refreshRepositoriesList(){
-        loadRepositoriesList(0);
-    }
-
     public MainAdapter getAdapter() {
         if(mAdapter == null)
             mAdapter = new MainAdapter(new ArrayList<>());
         return mAdapter;
-    }
-
-    private Flowable<Resource<List<Item>>> getRepositoriesListPublisher(int page) {
-        return Flowable.create(e -> {
-            e.onNext(Resource.loading(null));
-
-            Disposable disposable = mRepositoriesListRepository.getRepositoriesList(page)
-                    .observeOn(Schedulers.computation())
-                    .map(this::mapToItemAndImage)
-                    .map(Resource::success)
-                    .onErrorReturn(Resource::error)
-                    .subscribe(e::onNext);
-            addDisposable(disposable);
-        }, BackpressureStrategy.BUFFER);
     }
 
     private List<Item> mapToItemAndImage(Resource<RepositoriesList> equipes){

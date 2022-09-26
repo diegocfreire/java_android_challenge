@@ -120,6 +120,11 @@ public class PullRequestsActivity extends AppCompatActivity {
             } else if (resource.status == Status.ERROR) {
                 DialogUtils.showDialog(this, resource.message.header, resource.message.body);
             }
+
+            if (mAdapter.getItemCount()==0 && resource.status != Status.LOADING)
+                mBinding.emptyList.setVisibility(View.VISIBLE);
+            else
+                mBinding.emptyList.setVisibility(View.GONE);
         });
     }
 }

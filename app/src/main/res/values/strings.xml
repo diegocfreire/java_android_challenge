@@ -10,4 +10,7 @@
     <string name="dialog_button_post">Enviar</string>
     <string name="search_loading_message">Procurando registros</string>
 
+
+    <string name="null_loading_message">Nenhum registro encontrado</string>
+
 </resources>
