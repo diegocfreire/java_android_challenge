@@ -77,6 +77,8 @@ public class PullRequestsAdapter extends RecyclerView.Adapter<PullRequestsAdapte
 
             mBinding.title.setText(item.title);
             mBinding.descricao.setText(item.body);
+            mBinding.image.setImageBitmap(item.bitmap);
+            mBinding.username.setText(item.user.login);
         }
 
     }

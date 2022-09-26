@@ -1,5 +1,7 @@
 package com.example.list_app.data.entities;
 
+import android.graphics.Bitmap;
+
 import com.example.list_app.common.time.LocalDate;
 import com.google.gson.annotations.SerializedName;
 
@@ -13,7 +15,7 @@ class Head{
     public String label;
     public String ref;
     public String sha;
-    public User user;
+    public Owner user;
     public Repo repo;
 }
 
@@ -138,7 +140,7 @@ public class PullRequests {
     public String state;
     public boolean locked;
     public String title;
-    public User user;
+    public Owner user;
     public String body;
     public LocalDate created_at;
     public LocalDate updated_at;
@@ -163,6 +165,7 @@ public class PullRequests {
     public String author_association;
     public Object auto_merge;
     public Object active_lock_reason;
+    public transient Bitmap bitmap;
 }
 
 class Self{
@@ -171,26 +174,5 @@ class Self{
 
 class Statuses{
     public String href;
-}
-
-class User{
-    public String login;
-    public int id;
-    public String node_id;
-    public String avatar_url;
-    public String gravatar_id;
-    public String url;
-    public String html_url;
-    public String followers_url;
-    public String following_url;
-    public String gists_url;
-    public String starred_url;
-    public String subscriptions_url;
-    public String organizations_url;
-    public String repos_url;
-    public String events_url;
-    public String received_events_url;
-    public String type;
-    public boolean site_admin;
 }
 

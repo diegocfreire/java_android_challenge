@@ -4,6 +4,6 @@ public class Base {
     public String label;
     public String ref;
     public String sha;
-    public User user;
+    public Owner user;
     public Repo repo;
 }

@@ -13,10 +13,10 @@
             android:layout_height="match_parent"
             android:layout_marginStart="32dp"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="32dp"
             android:textColor="@color/teal_700"
             android:textSize="20sp"
-            app:layout_constraintEnd_toStartOf="@+id/webview"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="title" />
@@ -27,25 +27,53 @@
             android:layout_height="match_parent"
             android:layout_marginStart="32dp"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="32dp"
+            android:ellipsize="end"
+            android:maxLines="2"
             android:textColor="@color/black"
             android:textSize="16sp"
-            android:lines="2"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/webview"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/title"
             tools:text="title" />
 
         <ImageView
-            android:id="@+id/webview"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginEnd="32dp"
+            android:id="@+id/image"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="10dp"
             android:text="Hello World!"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/descricao" />
+
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="32dp"
+            android:gravity="center"
+            android:textSize="11sp"
+            app:layout_constraintBottom_toBottomOf="@+id/image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/image"
+            app:layout_constraintTop_toTopOf="@+id/image"
+            tools:text="nomedddddddddddddd" />
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="32dp"
+            android:background="?android:attr/listDivider"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/image" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
