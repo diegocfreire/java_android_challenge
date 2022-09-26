@@ -42,6 +42,8 @@ public class MainViewModel extends AndroidViewModel {
 
     private LiveData<Resource<List<Item>>> mItems;
 
+    public final ObservableField<Resource<List<Item>>> mValue = new ObservableField<>();
+
     private MainAdapter mAdapter;
 
     public MainViewModel(@NonNull Application application, @NonNull RepositoriesListRepository repositoriesListRepository) {
@@ -55,11 +57,21 @@ public class MainViewModel extends AndroidViewModel {
         return mItems;
     }
 
+    public ObservableField<Resource<List<Item>>> getmValue() {
+        return mValue;
+    }
+
     private void loadRepositoriesList(int page) {
-        if(mItems==null)
-        mItems = LiveDataReactiveStreams.fromPublisher(getRepositoriesListPublisher(page)
+        dataLoading.set(true);
+        Disposable disposable = mRepositoriesListRepository.getRepositoriesList(page)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()));
+                .observeOn(Schedulers.computation())
+                .map(this::sortAndMapToFlexibleItem)
+                .map(Resource::success)
+                .onErrorReturn(Resource::error)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(mValue::set);
+        addDisposable(disposable);
 
     }
 
