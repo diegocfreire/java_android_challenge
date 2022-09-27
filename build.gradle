@@ -1,0 +1,35 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+plugins {
+    id 'com.android.application' version '7.2.2' apply false
+    id 'com.android.library' version '7.2.2' apply false
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+ext{
+    verMultiDexSipportLib = '1.0.3'
+
+    verSupportLib = '26.1.0'
+    verConstraintLayout = '1.0.2'
+
+    verArchComponentJava8Lib = '1.1.0'
+    verArchComponentLifecycleExtensions = '1.1.0'
+    verArchComponentReactiveStreams = '1.1.0'
+    verRxRoom = '1.0.0'
+    verRoom = '1.0.0'
+
+    verGson = '2.8.0'
+    verRetrofit = '2.3.0'
+    verOkHttp = '3.8.0'
+
+    verFlexibleAdapter = '5.0.0-rc3'
+
+    verGuava = '23.0-android'
+
+    verTimber = '4.6.1'
+
+    verRxJava = '2.1.5'
+    verRxAndroid = '2.0.1'
+}
