@@ -89,6 +89,5 @@ public class Item implements Serializable {
     public int watchers;
     public String default_branch;
     public double score;
-    public transient Bitmap bitmap;
 }
 

@@ -165,7 +165,6 @@ public class PullRequests {
     public String author_association;
     public Object auto_merge;
     public Object active_lock_reason;
-    public transient Bitmap bitmap;
 }
 
 class Self{

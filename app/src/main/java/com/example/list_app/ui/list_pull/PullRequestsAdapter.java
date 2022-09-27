@@ -37,7 +37,6 @@ public class PullRequestsAdapter extends RecyclerView.Adapter<PullRequestsAdapte
         localDataSet = dataSet;
     }
 
-    // Create new views (invoked by the layout manager)
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
@@ -47,7 +46,6 @@ public class PullRequestsAdapter extends RecyclerView.Adapter<PullRequestsAdapte
         return new ViewHolder(Objects.requireNonNull(DataBindingUtil.bind(view)));
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
         PullRequests item = localDataSet.get(position);
@@ -61,7 +59,6 @@ public class PullRequestsAdapter extends RecyclerView.Adapter<PullRequestsAdapte
         });
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
         return localDataSet.size();
@@ -85,7 +82,6 @@ public class PullRequestsAdapter extends RecyclerView.Adapter<PullRequestsAdapte
 
             mBinding.title.setText(item.title);
             mBinding.descricao.setText(item.body);
-            mBinding.image.setImageBitmap(item.bitmap);
             mBinding.username.setText(item.user.login);
             try {
                 DateTime create = DateTime.parse(item.created_at,ISO8601_DATETIME);
