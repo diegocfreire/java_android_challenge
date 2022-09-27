@@ -17,6 +17,7 @@ import com.example.list_app.data.entities.Item;
 import com.example.list_app.data.entities.PullRequests;
 import com.example.list_app.data.network.Resource;
 import com.example.list_app.data.repository.RepositoriesListRepository;
+import com.example.list_app.ui.main.MainAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,9 @@ public class PullRequestsViewModel extends AndroidViewModel {
 
     private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
-    private LiveData<Resource<List<PullRequests>>> mPullRequests;
+    public final ObservableField<Resource<List<PullRequests>>> mPullRequests = new ObservableField<>();;
+
+    private PullRequestsAdapter mAdapter;
 
     private final Item mItem;
 
@@ -55,29 +58,31 @@ public class PullRequestsViewModel extends AndroidViewModel {
         setupObservables();
     }
 
-    public LiveData<Resource<List<PullRequests>>> getItems() {
+    public PullRequestsAdapter getAdapter() {
+        if(mAdapter == null)
+            mAdapter = new PullRequestsAdapter(new ArrayList<>());
+        return mAdapter;
+    }
+
+    public ObservableField<Resource<List<PullRequests>>> getItems() {
         return mPullRequests;
     }
 
+
     private void loadEquipesPublisher() {
-        mPullRequests = LiveDataReactiveStreams.fromPublisher(getEquipesPublisher()
+        dataLoading.set(true);
+        Disposable disposable = mRepositoriesListRepository.getPullRequestList(mItem.name,mItem.owner.login)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()));
+                .observeOn(Schedulers.computation())
+                .map(this::sortAndMapToFlexibleItem)
+                .map(Resource::success)
+                .onErrorReturn(Resource::error)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(mPullRequests::set);
+        addDisposable(disposable);
+
     }
 
-    private Flowable<Resource<List<PullRequests>>> getEquipesPublisher() {
-        return Flowable.create(e -> {
-            e.onNext(Resource.loading(null));
-
-            Disposable disposable = mRepositoriesListRepository.getPullRequestList(mItem.name,mItem.owner.login)
-                    .observeOn(Schedulers.computation())
-                    .map(this::sortAndMapToFlexibleItem)
-                    .map(Resource::success)
-                    .onErrorReturn(Resource::error)
-                    .subscribe(e::onNext);
-            addDisposable(disposable);
-        }, BackpressureStrategy.BUFFER);
-    }
     private List<PullRequests> sortAndMapToFlexibleItem(Resource<List<PullRequests>> equipes){
         List<PullRequests> sortedList =new ArrayList<>();
         if(equipes.data!=null)

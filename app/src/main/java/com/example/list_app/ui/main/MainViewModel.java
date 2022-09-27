@@ -20,8 +20,6 @@ import com.example.list_app.data.network.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.BackpressureStrategy;
-import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -39,7 +37,7 @@ public class MainViewModel extends AndroidViewModel {
 
     private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
-    public final ObservableField<Resource<List<Item>>> mValue = new ObservableField<>();
+    public final ObservableField<Resource<List<Item>>> mItems = new ObservableField<>();
 
     private MainAdapter mAdapter;
 
@@ -52,8 +50,8 @@ public class MainViewModel extends AndroidViewModel {
         setupObservables();
     }
 
-    public ObservableField<Resource<List<Item>>> getmValue() {
-        return mValue;
+    public ObservableField<Resource<List<Item>>> getItems() {
+        return mItems;
     }
 
     private void loadRepositoriesList(int page) {
@@ -66,7 +64,7 @@ public class MainViewModel extends AndroidViewModel {
                 .map(Resource::success)
                 .onErrorReturn(Resource::error)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(mValue::set);
+                .subscribe(mItems::set);
         addDisposable(disposable);
 
     }

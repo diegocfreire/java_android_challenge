@@ -16,12 +16,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.list_app.R;
 import com.example.list_app.data.entities.Item;
 import com.example.list_app.data.entities.PullRequests;
+import com.example.list_app.data.network.Resource;
 import com.example.list_app.data.network.Status;
 import com.example.list_app.data.repository.RepositoriesListRepository;
 import com.example.list_app.databinding.ActivityMainBinding;
 import com.example.list_app.utils.DialogUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -69,16 +71,21 @@ public class PullRequestsActivity extends AppCompatActivity {
         mViewModel.dataLoading.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable observable, int i) {
-                if(mViewModel.dataLoading.get())
-                    mBinding.listServicosLoading.setVisibility(View.VISIBLE);
-                else
-                    mBinding.listServicosLoading.setVisibility(View.GONE);
+                setVibilidadeLoad();
             }
         });
     }
 
+
+    private void setVibilidadeLoad(){
+        if(mViewModel.dataLoading.get())
+            mBinding.listServicosLoading.setVisibility(View.VISIBLE);
+        else
+            mBinding.listServicosLoading.setVisibility(View.GONE);
+    }
+
     private void setupAdapter() {
-        mAdapter = new PullRequestsAdapter(new ArrayList<>());
+        mAdapter = mViewModel.getAdapter();
 
         mAdapter.dataOnClick.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
@@ -112,19 +119,30 @@ public class PullRequestsActivity extends AppCompatActivity {
     }
 
     private void subscribeItems() {
-        mViewModel.getItems().observe(this, resource -> {
-            mViewModel.dataLoading.set(resource.status == Status.LOADING);
+        mViewModel.getItems().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable observable, int i) {
+                Resource<List<PullRequests>> resource = mViewModel.getItems().get();
+                assert resource != null;
+                mViewModel.dataLoading.set(resource.status == Status.LOADING);
 
-            if (resource.status == Status.SUCCESS) {
-                mAdapter.updateDataSet(resource.data, true);
-            } else if (resource.status == Status.ERROR) {
-                DialogUtils.showDialog(this, resource.message.header, resource.message.body);
+                if (resource.status == Status.SUCCESS) {
+                    mAdapter.updateDataSet(resource.data, true);
+                } else if (resource.status == Status.ERROR) {
+                    DialogUtils.showDialog(getApplicationContext(), resource.message.header, resource.message.body);
+                }
+
+                if (mAdapter.getItemCount()==0 && resource.status != Status.LOADING)
+                    mBinding.emptyList.setVisibility(View.VISIBLE);
+                else
+                    mBinding.emptyList.setVisibility(View.GONE);
             }
-
-            if (mAdapter.getItemCount()==0 && resource.status != Status.LOADING)
-                mBinding.emptyList.setVisibility(View.VISIBLE);
-            else
-                mBinding.emptyList.setVisibility(View.GONE);
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setVibilidadeLoad();
     }
 }

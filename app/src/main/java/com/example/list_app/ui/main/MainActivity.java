@@ -116,10 +116,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void subscribeItems() {
-        mViewModel.getmValue().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+        mViewModel.getItems().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable observable, int i) {
-                Resource<List<Item>> resource = mViewModel.getmValue().get();
+                Resource<List<Item>> resource = mViewModel.getItems().get();
                 assert resource != null;
                 mViewModel.dataLoading.set(resource.status == Status.LOADING);
 
