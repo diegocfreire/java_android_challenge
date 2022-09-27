@@ -67,6 +67,10 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         }
     }
 
+    public void clearData() {
+        localDataSet = new ArrayList<>();
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         private final ItemMainBinding mBinding;

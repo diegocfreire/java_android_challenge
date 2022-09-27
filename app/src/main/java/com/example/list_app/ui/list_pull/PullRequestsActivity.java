@@ -12,6 +12,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.databinding.Observable;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.list_app.R;
 import com.example.list_app.data.entities.Item;
@@ -51,6 +52,18 @@ public class PullRequestsActivity extends AppCompatActivity {
 
         setupAdapter();
         setLoadData();
+        setSwipeRefresh();
+    }
+
+    private void setSwipeRefresh() {
+        SwipeRefreshLayout swipeRefreshLayout = mBinding.swipeRefreshLayout;
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mViewModel.loadEquipesPublisher();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     @Override

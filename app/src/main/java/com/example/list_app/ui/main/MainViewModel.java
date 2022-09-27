@@ -46,7 +46,7 @@ public class MainViewModel extends AndroidViewModel {
     public MainViewModel(@NonNull Application application, @NonNull RepositoriesListRepository repositoriesListRepository) {
         super(application);
         mRepositoriesListRepository = repositoriesListRepository;
-        loadRepositoriesList(0);
+        loadRepositoriesList(0,true);
         setupObservables();
     }
 
@@ -54,23 +54,32 @@ public class MainViewModel extends AndroidViewModel {
         return mItems;
     }
 
-    private void loadRepositoriesList(int page) {
+    private void loadRepositoriesList(int page,boolean isRefresh) {
         this.page = page+1;
         dataLoading.set(true);
-        Disposable disposable = mRepositoriesListRepository.getRepositoriesList(page)
+        Disposable disposable = mRepositoriesListRepository.getRepositoriesList(this.page)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.computation())
                 .map(this::mapToItemAndImage)
                 .map(Resource::success)
                 .onErrorReturn(Resource::error)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(mItems::set);
+                .subscribe(listResource -> {
+                    if (isRefresh && mAdapter != null){
+                        mAdapter.clearData();
+                    }
+                    mItems.set(listResource);
+                });
         addDisposable(disposable);
 
     }
 
     public void newPageRepositoriesList(){
-        loadRepositoriesList(page);
+        loadRepositoriesList(page,false);
+    }
+
+    public void refreshPageRepositoriesList(){
+        loadRepositoriesList(0,true);
     }
 
     public MainAdapter getAdapter() {

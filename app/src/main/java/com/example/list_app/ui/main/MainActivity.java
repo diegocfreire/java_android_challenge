@@ -7,6 +7,7 @@ import androidx.databinding.Observable;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -44,6 +45,18 @@ public class MainActivity extends AppCompatActivity {
 
         setupAdapter();
         setLoadData();
+        setSwipeRefresh();
+    }
+
+    private void setSwipeRefresh() {
+        SwipeRefreshLayout swipeRefreshLayout = mBinding.swipeRefreshLayout;
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mViewModel.refreshPageRepositoriesList();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     private void setLoadData() {

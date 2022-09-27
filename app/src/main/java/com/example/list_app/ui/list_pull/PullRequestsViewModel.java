@@ -69,7 +69,7 @@ public class PullRequestsViewModel extends AndroidViewModel {
     }
 
 
-    private void loadEquipesPublisher() {
+    public void loadEquipesPublisher() {
         dataLoading.set(true);
         Disposable disposable = mRepositoriesListRepository.getPullRequestList(mItem.name,mItem.owner.login)
                 .subscribeOn(Schedulers.io())
