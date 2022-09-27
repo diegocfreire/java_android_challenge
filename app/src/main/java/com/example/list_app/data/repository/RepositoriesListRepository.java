@@ -13,11 +13,11 @@ public class RepositoriesListRepository {
 
     private static RepositoriesListRepository INSTANCE;
 
-    private final RepositoriesListRemoteDataSource mFundoRemoteDataSource;
+    private final RepositoriesListRemoteDataSource mRepositoriesListRemoteDataSource;
 
 
     private RepositoriesListRepository() {
-        mFundoRemoteDataSource = RepositoriesListRemoteDataSource.getInstance();
+        mRepositoriesListRemoteDataSource = RepositoriesListRemoteDataSource.getInstance();
     }
 
     public static synchronized RepositoriesListRepository getInstance() {
@@ -33,11 +33,11 @@ public class RepositoriesListRepository {
 
 
     public Single<Resource<RepositoriesList>> getRepositoriesList(int page) {
-        return mFundoRemoteDataSource.getRepositoriesList(page);
+        return mRepositoriesListRemoteDataSource.getRepositoriesList(page);
     }
 
     public Single<Resource<List<PullRequests>>> getPullRequestList(String name,String login) {
-        return mFundoRemoteDataSource.getPullRequestList(name,login);
+        return mRepositoriesListRemoteDataSource.getPullRequestList(name,login);
     }
 
 }
